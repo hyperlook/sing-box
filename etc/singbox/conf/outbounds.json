@@ -1,0 +1,106 @@
+{
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "DIRECT"
+    },
+    {
+      "type": "block",
+      "tag": "REJECT"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "mega",
+        "bwg",
+        "rn"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "5m0s",
+      "tolerance": 50
+    },
+    {
+      "type": "selector",
+      "tag": "o",
+      "outbounds": [
+        "auto",
+        "mega",
+        "bwg",
+        "rn"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "o2",
+      "outbounds": [
+        "mega",
+        "bwg",
+        "rn",
+        "DIRECT"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "apple",
+      "outbounds": [
+        "DIRECT",
+        "auto",
+        "o",
+        "o2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "google",
+      "outbounds": [
+        "auto",
+        "o",
+        "o2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "github",
+      "outbounds": [
+        "auto",
+        "o",
+        "o2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "microsoft",
+      "outbounds": [
+        "DIRECT",
+        "auto",
+        "o",
+        "o2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "youtube",
+      "outbounds": [
+        "auto",
+        "o",
+        "o2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "x",
+      "outbounds": [
+        "auto",
+        "o",
+        "o2"
+      ]
+    }
+    
+  ]
+ 
+}

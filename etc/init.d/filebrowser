@@ -1,0 +1,42 @@
+#!/sbin/openrc-run
+
+name="filebrowser"
+description="File Browser service"
+
+# 定义命令和参数
+command="/usr/local/bin/filebrowser"
+command_args="-c /etc/filebrowser/config.json"
+
+# 启用后台运行
+command_background="true"
+
+# 定义 PID 文件路径，用于追踪运行中的进程
+pidfile="/var/run/${name}.pid"
+
+depend() {
+    need net
+}
+
+start_pre() {
+    # 检查命令是否存在
+    if ! [ -x "${command}" ]; then
+        eerror "Command ${command} not found or not executable"
+        return 1
+    fi
+    # 检查配置文件是否存在
+    if ! [ -f "/etc/filebrowser/config.json" ]; then
+        eerror "Configuration file /etc/filebrowser/config.json not found"
+        return 1
+    fi
+}
+
+stop() {
+    if [ -f "${pidfile}" ]; then
+        ebegin "Stopping ${name}"
+        start-stop-daemon --stop --pidfile "${pidfile}"
+        eend $?
+    else
+        eerror "PID file ${pidfile} not found, cannot stop ${name}"
+        return 1
+    fi
+}

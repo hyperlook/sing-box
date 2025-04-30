@@ -1,0 +1,16 @@
+{
+  "experimental": {
+    "clash_api": {
+      "external_controller": "0.0.0.0:9999",
+      "external_ui": "zash",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/download/v1.82.0/dist.zip",
+      "external_ui_download_detour": "o",
+      "default_mode": "rule"
+    },
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true,
+      "path": "/etc/sing-box/cache.db"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+.DS_Store
+o[0-9]_*.json
+*.bak
+bak/
+
+
