@@ -28,20 +28,8 @@ start_pre() {
 
 start() {
     ebegin "Starting $name"
-    # 添加 ip rule 和 ip route 规则
-    ip rule add fwmark 0x1ed4 lookup 100 prio 32765 2>> "$logfile"
-    if [ $? -eq 0 ]; then
-        einfo "Added ip rule for fwmark 0x1ed4 to lookup table 100"
-    else
-        ewarn "Failed to add ip rule for fwmark 0x1ed4 or rule already exists"
-    fi
 
-    ip route add local default dev lo scope host table 100 2>> "$logfile"
-    if [ $? -eq 0 ]; then
-        einfo "Added ip route for table 100"
-    else
-        ewarn "Failed to add ip route for table 100 or route already exists"
-    fi
+
 
     # 启动 sing-box
     start-stop-daemon --start --pidfile "$pidfile" \
@@ -50,17 +38,7 @@ start() {
         -- $command_args >> "$logfile" 2>&1
     eend $?
 
-    # 在启动 sing-box 后应用 nftables 规则
-    if [ -f "/etc/sing-box/s.nft" ]; then
-        nft -f /etc/sing-box/s.nft && nft -f /etc/sing-box/cnlist.nft
-        if [ $? -eq 0 ]; then
-            einfo "Applied nftables rules from /etc/sing-box/s.nft"
-        else
-            eerror "Failed to apply nftables rules!"
-        fi
-    else
-        ewarn "nftables rules file /etc/sing-box/s.nft not found!"
-    fi
+
 }
 
 stop() {
@@ -83,20 +61,6 @@ stop() {
 
     eend 0  # Indicate success
 
-    # 删除 ip rule 和 ip route 规则
-    ip rule del fwmark 0x1ed4 lookup 100 prio 32765 2>> "$logfile"
-    if [ $? -eq 0 ]; then
-        einfo "Deleted ip rule for fwmark 0x1ed4"
-    else
-        ewarn "Failed to delete ip rule for fwmark 0x1ed4 or rule does not exist"
-    fi
-
-    ip route del local default dev lo scope host table 100 2>> "$logfile"
-    if [ $? -eq 0 ]; then
-        einfo "Deleted ip route for table 100"
-    else
-        ewarn "Failed to delete ip route for table 100 or route does not exist"
-    fi
 }
 
 restart() {

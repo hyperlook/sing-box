@@ -24,7 +24,15 @@
   echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf 
   sysctl -p
   ```
-
+### tun模块
+- 临时开启（重启后失效）
+  ```bash
+  modprobe tun
+  ```
+- 永久开启方法
+  ```bash
+  echo "tun" >> /etc/modules
+  ```
 
 ### 安装 sing-box
 ```bash
