@@ -1,13 +1,12 @@
 
-
-
-          
 # Alpine 配置为网关旁路由
 
+> tun板 官方为处理路由本机 output 链，路由本机上网需要自己手动添加 chain 来处理。
+> 为效率放弃 也是可以的，似乎ruleset 里的 srs 下载又是正常的，挺奇怪
 
 ### 网络配置
 - setup-alpine 按步骤配置好 IP 和下级网关 DNS
-  
+  > resolve.conf 可以写172.18.0.2 对应 tun 配置的 ip
     ```
     /etc/network/interfaces
     /etc/resolv.conf
@@ -52,6 +51,9 @@ rc-service sing-box stop
 ```
 
 ### 添加 singbox 用户
+> tun 版没用到 skgid 来过滤，可选，为后续手动添加output 备着
+
+
 因为 nft 需要用到 skgid 来过滤 sing-box 发出的流量，防止 lo 死循环。为方便 sing-box 用 root id，直接编辑 /etc/passwd：
 ```bash
 echo "singbox:x:0:7893:::" >> /etc/passwd
@@ -65,7 +67,7 @@ apk add nftables
 ```
 
 ### nft 大致思路
-
+> tun 板 路由策略 以及nft 部分已经由 sing-box 完成
 #### 路由策略
 
 额外标记引导被 tproxy 的数据包 到 sing-box 端口
@@ -112,8 +114,9 @@ DNS 优先单独配置
 
 
 ### 配置规则
-- 具体规则见 s.nft
+- 具体规则见 s.nft、tun.nft(由 sing-box 生成)
 - 添加方式随 sing-box 服务，见 /etc/init.d/sing-box
 
-
+## filebrowser
+可选装装 filebrowser 方便编辑json 和重启服务
 wget https://github.com/filebrowser/filebrowser/releases/download/v2.32.0/linux-amd64-filebrowser.tar.gz 
