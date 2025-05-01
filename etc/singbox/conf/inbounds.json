@@ -27,7 +27,7 @@
       "tag": "tproxy-in",
       "listen": "::",
       "listen_port": 7893,
-      "sniff": true,
+      "sniff": false,
       "sniff_override_destination": false
     }
   ]

@@ -56,16 +56,14 @@ table ip xray {
 
 	chain prerouting {
 		type filter hook prerouting priority mangle; policy accept;
-		counter jump PASS		
-		ip daddr @dns_ips udp dport {53, 443, 853} meta mark set 0x1ed4 counter tproxy to :7893 accept			
-		ip daddr @china_ips counter accept					
+		counter jump PASS
+		#ip daddr @dns_ips udp dport {53, 443, 853} meta mark set 0x1ed4 counter tproxy to :7893 accept										
 		meta l4proto { tcp, udp } meta mark set 0x1ed4 counter tproxy to :7893
 	}
 
 	chain output {
 		type filter hook output priority mangle; policy accept;
-		counter jump PASS
-		ip daddr @china_ips counter accept
+		counter jump PASS2
 		#meta l4proto { tcp, udp } counter meta mark set 0x1ed4
 		meta l4proto tcp counter mark set 0x1ed6
 	}
@@ -77,11 +75,21 @@ table ip xray {
 	}
 
 	chain PASS {
-		meta skgid 7893 counter accept
-		#udp dport 53 counter accept
-		#tcp dport 53 counter accept
 		ip daddr @lan_ips counter accept
 		ip daddr @cdn_ips counter accept
+		#meta skgid 7893 counter accept
+		
+		meta l4proto tcp  tcp dport != @proxy_ports counter accept
+		meta l4proto udp udp dport != @proxy_ports counter accept
+		ip daddr @china_ips counter accept
+	}
+
+	chain PASS2 {
+		ip daddr @lan_ips counter accept
+		ip daddr @cdn_ips counter accept
+		ip daddr @china_ips counter accept
+		meta skgid 7893 counter accept
+		#udp dport 53 counter accept		#tcp dport 53 counter accept				
 		meta l4proto tcp  tcp dport != @proxy_ports counter accept
 		meta l4proto udp udp dport != @proxy_ports counter accept
 
